@@ -2,3 +2,4 @@ django
 djangorestframework
 environs
 drf-yasg
+django-cors-headers
