@@ -2,6 +2,9 @@ from django.test import TestCase
 from ..services.courses_service import CourseService
 from django.core.exceptions import ValidationError
 from datetime import datetime, timedelta
+from api.enrollments.models import Enrollment
+from api.students.models import Student
+from django.db import IntegrityError
 
 
 class CourseServiceTest(TestCase):
@@ -40,4 +43,15 @@ class CourseServiceTest(TestCase):
             CourseService.create_course(self.course_data)
 
     # can't delete a course if there is any student enrolled on it
-    
+    def test_course_cannot_be_deleted_if_students_enrolled(self):
+        student1 = Student.objects.create(
+            cpf="12345678901",
+            name="John Doe",
+            email="johndoe@example.com",
+            cellphone="1234567890",
+        )
+        course = CourseService.create_course(self.course_data)
+        Enrollment.objects.create(student=student1, course=course)
+        
+        with self.assertRaises(IntegrityError):
+            CourseService.delete_course(course.id)

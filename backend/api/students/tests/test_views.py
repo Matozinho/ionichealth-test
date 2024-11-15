@@ -36,14 +36,26 @@ class StudentViewTest(APITestCase):
 
     def test_create_student_duplicate_cpf(self):
         self.client.post(self.list_url, self.student_data, format="json")
-        response = self.client.post(self.list_url, self.student_data, format="json")
+        response = self.client.post(
+            self.list_url,
+            {**self.student_data, "email": "email@email.com"},
+            format="json",
+        )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("A student with this CPF already exists", response.data["error"])
+
+    def test_create_student_duplicate_email(self):
+        self.client.post(self.list_url, self.student_data, format="json")
+        response = self.client.post(
+            self.list_url, {**self.student_data, "cpf": "12345678902"}, format="json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("A student with this email already exists", response.data["error"])
 
     def test_retrieve_student(self):
         response = self.client.post(self.list_url, self.student_data, format="json")
         self.detail_url = reverse(
-            "student-detail", kwargs={"student_id": response.data["id"]}
+            "student-get-update-delete", kwargs={"student_id": response.data["id"]}
         )
         get_response = self.client.get(self.detail_url)
         self.assertEqual(get_response.status_code, status.HTTP_200_OK)
@@ -52,7 +64,7 @@ class StudentViewTest(APITestCase):
     def test_update_student(self):
         response = self.client.post(self.list_url, self.student_data, format="json")
         self.detail_url = reverse(
-            "student-detail", kwargs={"student_id": response.data["id"]}
+            "student-get-update-delete", kwargs={"student_id": response.data["id"]}
         )
         updated_data = {"name": "Bob Brown Updated", "courses": [self.course.id]}
         update_response = self.client.put(self.detail_url, updated_data, format="json")
@@ -62,7 +74,7 @@ class StudentViewTest(APITestCase):
     def test_delete_student(self):
         response = self.client.post(self.list_url, self.student_data, format="json")
         self.detail_url = reverse(
-            "student-detail", kwargs={"student_id": response.data["id"]}
+            "student-get-update-delete", kwargs={"student_id": response.data["id"]}
         )
         delete_response = self.client.delete(self.detail_url)
         self.assertEqual(delete_response.status_code, status.HTTP_204_NO_CONTENT)

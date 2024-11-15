@@ -4,7 +4,7 @@ from api.enrollments.models import Enrollment
 from ..models import Student
 from api.enrollments.services.enrollment_service import EnrollmentService
 from django.core.exceptions import ValidationError
-from django.db import transaction
+from django.db import transaction, IntegrityError
 
 
 class StudentService:
@@ -15,26 +15,25 @@ class StudentService:
     @staticmethod
     @transaction.atomic
     def create_student(student_data, course_ids):
-        # Check if a student with the same CPF already exists
-        # if StudentRepository.get_student_by_cpf(student_data["cpf"]):
-        #     raise ValidationError("A student with this CPF already exists.")
-
         # Check that at least one course is provided
         if not course_ids:
             raise ValidationError("At least one course must be selected.")
 
-        # Start transaction and attempt to create student and enrollments
         try:
-            # Create the student
             student = StudentRepository.create_student(student_data)
 
-            # Enroll the student in the specified courses
-            for course_id in course_ids:
-                EnrollmentService.enroll_student_in_course(student, course_id)
+            EnrollmentService.enroll_student_in_multiple_courses(student, course_ids)
 
             return student
+        except IntegrityError as e:
+            if "cpf" in str(e):
+                raise ValidationError("A student with this CPF already exists.")
+            elif "email" in str(e):
+                raise ValidationError("A student with this email already exists.")
+            else:
+                raise ValidationError(f"Failed to create student: {e}")
+
         except ValidationError as e:
-            # If any error occurs, the transaction will be rolled back
             raise ValidationError(f"Failed to create student and enrollments: {e}")
 
     @staticmethod

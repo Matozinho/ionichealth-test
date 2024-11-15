@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'api',
+    'api.courses',
+    'api.students',
+    'api.enrollments',
 ]
 
 MIDDLEWARE = [
