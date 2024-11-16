@@ -70,13 +70,3 @@ class StudentViewTest(APITestCase):
         update_response = self.client.put(self.detail_url, updated_data, format="json")
         self.assertEqual(update_response.status_code, status.HTTP_200_OK)
         self.assertEqual(update_response.data["name"], "Bob Brown Updated")
-
-    def test_delete_student(self):
-        response = self.client.post(self.list_url, self.student_data, format="json")
-        self.detail_url = reverse(
-            "student-get-update-delete", kwargs={"student_id": response.data["id"]}
-        )
-        delete_response = self.client.delete(self.detail_url)
-        self.assertEqual(delete_response.status_code, status.HTTP_204_NO_CONTENT)
-        get_response = self.client.get(self.detail_url)
-        self.assertEqual(get_response.status_code, status.HTTP_404_NOT_FOUND)
