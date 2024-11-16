@@ -13,36 +13,35 @@ import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useCallback, type FC } from "react";
 import { toast } from "sonner";
-import { deleteCourse } from "../_services/delete-course";
+import { deleteStudent } from "../_services/delete-student";
 
 export interface DeleteDialogProps
 	extends Pick<DialogProps, "open" | "onOpenChange"> {
-	courseId: string | null;
+	studentId: string | null;
 }
 
 export const DeleteDialog: FC<DeleteDialogProps> = ({
 	open,
 	onOpenChange,
-	courseId,
+	studentId,
 }) => {
 	const { mutate, isLoading } = useMutation({
-		mutationFn: async (id: string) => await deleteCourse(id),
+		mutationFn: async (id: string) => await deleteStudent(id),
 		onSuccess: () => {
 			onOpenChange?.(false);
-			toast.success("Course deleted successfully");
+			toast.success("student deleted successfully");
 		},
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		onError: (error: any) => {
-			console.debug(error);
-			toast.error(error?.response?.data?.error || error?.message || "Unable to delete course");
+			toast.error(error?.message || "Unable to delete student");
 		},
 	});
 
 	const handleDelete = useCallback(async () => {
-		if (courseId) {
-			mutate(courseId);
+		if (studentId) {
+			mutate(studentId);
 		}
-	}, [courseId, mutate]);
+	}, [studentId, mutate]);
 
 	return (
 		<AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -51,7 +50,7 @@ export const DeleteDialog: FC<DeleteDialogProps> = ({
 					<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
 					<AlertDialogDescription>
 						This action cannot be undone. This will permanently delete the
-						course.
+						Student.
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
