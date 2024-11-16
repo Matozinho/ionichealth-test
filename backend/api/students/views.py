@@ -5,6 +5,7 @@ from .services.students_service import StudentService
 from .serializers import StudentSerializer
 from django.core.exceptions import ValidationError
 from drf_yasg.utils import swagger_auto_schema
+from api.enrollments.serializers import EnrollmentSerializer
 
 class StudentListView(APIView):
     @swagger_auto_schema(
@@ -42,11 +43,16 @@ class StudentDetailView(APIView):
         responses={200: StudentSerializer, 404: "Not Found"}
     )
     def get(self, request, student_id):
-        student = StudentService.get_student(student_id)
+        student, enrollments = StudentService.get_student(student_id)
         if not student:
             return Response({"error": "Student not found."}, status=status.HTTP_404_NOT_FOUND)
-        serializer = StudentSerializer(student)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        student_serializer = StudentSerializer(student)
+        enrollments_serializer = EnrollmentSerializer(enrollments, many=True)
+        data = {
+            **student_serializer.data,
+            "courses": enrollments_serializer.data
+        }
+        return Response(data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
         operation_description="Update an existing student",

@@ -3,7 +3,9 @@ from rest_framework import status
 from django.urls import reverse
 from ..models import Course
 from datetime import datetime, timedelta
-
+from api.students.models import Student
+from api.enrollments.models import Enrollment
+from django.core.exceptions import ValidationError
 
 class CourseViewTest(APITestCase):
     def setUp(self):
@@ -48,3 +50,17 @@ class CourseViewTest(APITestCase):
         response = self.client.delete(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Course.objects.filter(id=self.course.id).exists())
+
+    def test_course_cannot_be_deleted_if_students_enrolled(self):
+        student = Student.objects.create(
+            cpf="12345678901",
+            name="John Doe",
+            email="johndoe@example.com",
+            cellphone="1234567890",
+        )
+        Enrollment.objects.create(student=student, course=self.course)
+        
+        response = self.client.delete(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTrue(Course.objects.filter(id=self.course.id).exists())
+        self.assertIn("Cannot delete a course with active enrollments", response.data["error"])

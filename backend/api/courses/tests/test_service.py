@@ -53,5 +53,5 @@ class CourseServiceTest(TestCase):
         course = CourseService.create_course(self.course_data)
         Enrollment.objects.create(student=student1, course=course)
         
-        with self.assertRaises(IntegrityError):
+        with self.assertRaises(ValidationError):
             CourseService.delete_course(course.id)

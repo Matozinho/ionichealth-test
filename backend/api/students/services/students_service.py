@@ -38,8 +38,17 @@ class StudentService:
 
     @staticmethod
     def get_student(student_id):
-        return StudentRepository.get_student_by_id(student_id)
+        student = StudentRepository.get_student_by_id(student_id)
 
+        if not student:
+            raise ValidationError("Student not found.")
+        
+        enrollments = EnrollmentService.get_enrollments_for_student(student)
+
+        return student, enrollments
+        
+
+    
     @staticmethod
     @transaction.atomic
     def update_student(student_id, student_data, course_ids=None):
@@ -49,6 +58,8 @@ class StudentService:
 
         # Update the student details
         updated_student = StudentRepository.update_student(student, student_data)
+
+        print("update_student", course_ids)
 
         # If course_ids are provided, update enrollments
         if course_ids is not None:

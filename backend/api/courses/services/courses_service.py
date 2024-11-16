@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.db.models.deletion import ProtectedError
 from ..repositories.courses_repository import CourseRepository
 
 
@@ -40,5 +41,7 @@ class CourseService:
         if not course:
             raise ValidationError("Course not found.")
 
-        # validate if I can delete a course without
-        CourseRepository.delete_course(course)
+        try:
+            CourseRepository.delete_course(course)
+        except ProtectedError:
+            raise ValidationError("Cannot delete a course with active enrollments")
