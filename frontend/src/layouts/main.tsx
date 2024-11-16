@@ -18,7 +18,7 @@ export const MainLayout = () => {
 							<h1 className="text-xl font-semibold">{currentPage}</h1>
 						</div>
 					</header>
-					<main className="flex w-full overflow-auto p-8">
+					<main className="flex w-full overflow-auto">
 						<Outlet />
 					</main>
 				</section>

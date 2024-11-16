@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 
 export const DashboardPage = () => {
 	return (
-		<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+		<div className="p-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 			{sidebarPages.slice(1).map((page) => (
 				<Link to={page.href} key={page.name}>
 					<Card className="hover:bg-gray-50">

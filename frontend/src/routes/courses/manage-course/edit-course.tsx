@@ -21,7 +21,7 @@ const courseSchemaExtended = courseSchema.concat(
 );
 export type CourseSchemaExtended = yup.InferType<typeof courseSchemaExtended>;
 
-export const EditCoursePage = () => {
+export const EditCourse = () => {
 	const { courseId } = useParams();
 
 	const form = useForm<CourseSchemaExtended>({
@@ -65,22 +65,16 @@ export const EditCoursePage = () => {
 	}, []);
 
 	return (
-		<section className="flex flex-col w-full items-center">
-			<Form {...form}>
-				<form
-					className="flex flex-col gap-4 bg-slate-50 w-full max-w-md p-4 rounded-lg"
-					onSubmit={form.handleSubmit(onSubmit)}
-				>
-					<FormFields />
-					<Button type="submit" className="mt-4">
-						{loadingSave ? (
-							<Loader2 className="animate-spin" />
-						) : (
-							"Update course"
-						)}
-					</Button>
-				</form>
-			</Form>
-		</section>
+		<Form {...form}>
+			<form
+				className="flex flex-col gap-4 bg-slate-50 w-full max-w-md p-4 rounded-lg"
+				onSubmit={form.handleSubmit(onSubmit)}
+			>
+				<FormFields />
+				<Button type="submit" className="mt-4">
+					{loadingSave ? <Loader2 className="animate-spin" /> : "Update course"}
+				</Button>
+			</form>
+		</Form>
 	);
 };

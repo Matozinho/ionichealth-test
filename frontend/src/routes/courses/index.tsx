@@ -14,8 +14,8 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { formatDateForLocale } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { format, parse } from "date-fns";
 import { Bolt, EllipsisVertical, Plus, Trash2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
@@ -41,11 +41,6 @@ export const CoursesPage = () => {
 		refetch();
 	};
 
-	const formatDateForLocale = useCallback((dateString: string) => {
-		const date = parse(dateString, "yyyy-MM-dd", new Date());
-		return format(date, "P");
-	}, []);
-
 	const handleDelete = useCallback((courseId: string) => {
 		setDeleteCourseId(courseId);
 		setOpenDelete(true);
@@ -61,7 +56,7 @@ export const CoursesPage = () => {
 	);
 
 	return (
-		<div className="flex flex-col w-full h-full">
+		<div className="flex flex-col w-full h-full p-8">
 			<section className="flex justify-between">
 				<h2 className="text-lg font-medium">Courses list</h2>
 				<DialogForm open={isDialogOpen} onOpenChange={onOpenChange}>

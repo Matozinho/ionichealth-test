@@ -2,9 +2,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Providers } from "./components/providers";
 import { MainLayout } from "./layouts/main";
 import { CoursesPage } from "./routes/courses";
-import { EditCoursePage } from "./routes/courses/edit-course";
+import { ManageCoursePage } from "./routes/courses/manage-course";
 import { DashboardPage } from "./routes/dashboard";
-import { EnrollmentsPage } from "./routes/enrollments";
 import { StudentsPage } from "./routes/students";
 import { EditStudentPage } from "./routes/students/edit-student";
 
@@ -19,13 +18,12 @@ function App() {
 						</Route>
 						<Route path="courses">
 							<Route index element={<CoursesPage />} />
-							<Route path=":courseId" element={<EditCoursePage />} />
+							<Route path=":courseId" element={<ManageCoursePage />} />
 						</Route>
 						<Route path="students">
 							<Route index element={<StudentsPage />} />
 							<Route path=":studentId" element={<EditStudentPage />} />
 						</Route>
-						<Route path="enrollments" element={<EnrollmentsPage />} />
 					</Route>
 				</Routes>
 			</BrowserRouter>

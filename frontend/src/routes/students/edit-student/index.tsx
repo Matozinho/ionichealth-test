@@ -67,7 +67,7 @@ export const EditStudentPage = () => {
 	}, []);
 
 	return (
-		<section className="flex flex-col w-full items-center">
+		<section className="flex flex-col w-full items-center p-8">
 			<Form {...form}>
 				<form
 					className="flex flex-col gap-4 bg-slate-50 w-full max-w-md p-4 rounded-lg"

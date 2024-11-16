@@ -15,63 +15,52 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
-import { Edit, EllipsisVertical, Plus, Trash2 } from "lucide-react";
+import { format } from "date-fns";
+import { Bolt, EllipsisVertical, Unlink } from "lucide-react";
 import { useCallback, useState } from "react";
-import { Link } from "react-router-dom";
-import { DeleteDialog } from "./_components/delete-dialog";
-import { DialogForm } from "./_components/dialog-form";
-import { fetchStudents } from "./_services/fetch-students";
+import { Link, useParams } from "react-router-dom";
+import { DisenrollDialog } from "../_components/disenroll-dialog";
+import { fetchCourseStudents } from "../_services/fetch-course-students";
 
-export const StudentsPage = () => {
-	const [isDialogOpen, setIsDialogOpen] = useState(false);
-	const [openDelete, setOpenDelete] = useState(false);
-	const [deleteStudentId, setDeleteStudentId] = useState<null | string>(null);
+export const EnrolledStudents = () => {
+	const { courseId } = useParams();
+	const [disenrollDialogOpen, setDisenrollDialogOpen] = useState(false);
+	const [disenrollStudentId, setDisenrollStudentId] = useState<null | string>(
+		null,
+	);
+
 	const {
-		isLoading,
 		data: students,
+		isLoading,
 		refetch,
 	} = useQuery({
-		queryKey: ["students"],
-		queryFn: async () => await fetchStudents(),
+		queryKey: [`course-${courseId}-students`],
+		queryFn: async () => await fetchCourseStudents(courseId),
 	});
 
-	const onOpenChange = (state: boolean) => {
-		setIsDialogOpen(state);
-		refetch();
-	};
+	const handleDisenroll = useCallback((courseId: string) => {
+		setDisenrollStudentId(courseId);
+		setDisenrollDialogOpen(true);
+	}, []);
 
-	const handleDeleteDialogClose = useCallback(
+	const handleDisenrollDialogClose = useCallback(
 		(open: boolean) => {
-			setDeleteStudentId(null);
-			setOpenDelete(open);
+			setDisenrollStudentId(null);
+			setDisenrollDialogOpen(open);
 			refetch();
 		},
 		[refetch],
 	);
 
-	const handleDelete = useCallback((studentId: string) => {
-		setDeleteStudentId(studentId);
-		setOpenDelete(true);
-	}, []);
-
 	return (
-		<div className="flex flex-col w-full h-full p-8">
-			<section className="flex justify-between">
-				<h2 className="text-lg font-medium">Students list</h2>
-				<DialogForm open={isDialogOpen} onOpenChange={onOpenChange}>
-					<Button size="icon">
-						<Plus />
-					</Button>
-				</DialogForm>
-			</section>
-
+		<>
 			<Table>
 				<TableHeader>
 					<TableRow>
 						<TableHead>Name</TableHead>
-						<TableHead>CPF</TableHead>
-						<TableHead>E-mail</TableHead>
+						<TableHead>Email</TableHead>
 						<TableHead>Cellphone</TableHead>
+						<TableHead>Enrollment date</TableHead>
 						<TableHead />
 					</TableRow>
 				</TableHeader>
@@ -82,9 +71,9 @@ export const StudentsPage = () => {
 						students?.map((student) => (
 							<TableRow key={student.id}>
 								<TableCell className="font-medium">{student.name}</TableCell>
-								<TableCell>{student.cpf}</TableCell>
 								<TableCell>{student.email}</TableCell>
 								<TableCell>{student.cellphone}</TableCell>
+								<TableCell>{format(student.enrollment_date, "PPP")}</TableCell>
 								<TableCell>
 									<DropdownMenu>
 										<DropdownMenuTrigger asChild>
@@ -93,17 +82,17 @@ export const StudentsPage = () => {
 											</Button>
 										</DropdownMenuTrigger>
 										<DropdownMenuContent>
-											<Link to={student.id}>
+											<Link to={`/students/${student.id}`}>
 												<DropdownMenuItem className="flex gap-1 items-center">
-													<Edit size={16} /> Edit
+													<Bolt size={16} /> Manage
 												</DropdownMenuItem>
 											</Link>
 											<DropdownMenuItem
-												onClick={() => handleDelete(student.id)}
+												onClick={() => handleDisenroll(student.id)}
 												className="flex gap-1 items-center"
 											>
-												<Trash2 size={16} />
-												Delete
+												<Unlink size={16} />
+												Disenroll
 											</DropdownMenuItem>
 										</DropdownMenuContent>
 									</DropdownMenu>
@@ -113,12 +102,12 @@ export const StudentsPage = () => {
 					)}
 				</TableBody>
 			</Table>
-
-			<DeleteDialog
-				open={openDelete}
-				onOpenChange={handleDeleteDialogClose}
-				studentId={deleteStudentId}
+			<DisenrollDialog
+				open={disenrollDialogOpen}
+				onOpenChange={handleDisenrollDialogClose}
+				studentId={disenrollStudentId}
+				courseId={courseId ?? null}
 			/>
-		</div>
+		</>
 	);
 };
