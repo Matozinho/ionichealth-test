@@ -54,7 +54,6 @@ export const EditStudentPage = () => {
 
 	useEffect(() => {
 		if (!isLoading && data) {
-			console.debug("[EditStudentPage] data: ", data);
 			form.reset({
 				...data,
 				courses: formatEnrollments(data.courses),

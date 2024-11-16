@@ -40,7 +40,13 @@ export const FormFields = () => {
 				control={form.control}
 				name="end_date"
 				render={({ field }) => (
-					<FormDatePicker label="End Date" field={field} />
+					<FormDatePicker
+						calendarProps={{
+							disabled: (date) => date < form.getValues("begin_date"),
+						}}
+						label="End Date"
+						field={field}
+					/>
 				)}
 			/>
 		</>

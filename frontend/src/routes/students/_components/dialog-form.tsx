@@ -88,7 +88,7 @@ export const DialogForm: FC<PropsWithChildren<DialogFormProps>> = ({
 				</Form>
 				<DialogFooter>
 					<Button type="submit" form="create-student-form">
-						{isLoading ? <Loader2 className="animate-spin" /> : "Save Course"}
+						{isLoading ? <Loader2 className="animate-spin" /> : "Save Student"}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

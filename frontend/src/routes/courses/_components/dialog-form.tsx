@@ -25,7 +25,10 @@ import { FormFields } from "./form-fields";
 export const courseSchema = yup.object().shape({
 	name: yup.string().required(),
 	begin_date: yup.date().required(),
-	end_date: yup.date().required(),
+	end_date: yup
+		.date()
+		.required()
+		.min(yup.ref("begin_date"), "End date must be after begin date"),
 });
 export type CouseSchema = yup.InferType<typeof courseSchema>;
 

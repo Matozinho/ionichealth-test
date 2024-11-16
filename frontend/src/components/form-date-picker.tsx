@@ -7,7 +7,7 @@ import type {
 	FieldValues,
 } from "react-hook-form";
 import { Button } from "./ui/button";
-import { Calendar } from "./ui/calendar";
+import { Calendar, type CalendarProps } from "./ui/calendar";
 import { FormControl, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
@@ -17,6 +17,10 @@ interface FormFieldWrapperProps<
 > {
 	label: string;
 	field: ControllerRenderProps<TFieldValues, TName>;
+	calendarProps?: Omit<
+		CalendarProps,
+		"onSelect" | "mode" | "selected" | "onSelect"
+	>;
 }
 
 export const FormDatePicker = <
@@ -25,6 +29,7 @@ export const FormDatePicker = <
 >({
 	label,
 	field,
+	calendarProps,
 }: FormFieldWrapperProps<TFieldValues, TName>) => {
 	return (
 		<FormItem className="flex flex-col">
@@ -53,8 +58,8 @@ export const FormDatePicker = <
 						mode="single"
 						selected={field.value}
 						onSelect={field.onChange}
-						disabled={(date) => date < new Date()}
 						initialFocus
+						{...calendarProps}
 					/>
 				</PopoverContent>
 			</Popover>
