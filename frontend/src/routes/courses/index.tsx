@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
 import { format, parse } from "date-fns";
-import { Edit, EllipsisVertical, Plus, Trash2 } from "lucide-react";
+import { Bolt, EllipsisVertical, Plus, Trash2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import { DeleteDialog } from "./_components/delete-dialog";
@@ -97,14 +97,11 @@ export const CoursesPage = () => {
 											</Button>
 										</DropdownMenuTrigger>
 										<DropdownMenuContent>
-											<DropdownMenuItem>
-												<Link
-													className="flex gap-1 items-center"
-													to={course.id}
-												>
-													<Edit size={16} /> Edit
-												</Link>
-											</DropdownMenuItem>
+											<Link to={course.id}>
+												<DropdownMenuItem className="flex gap-1 items-center">
+													<Bolt size={16} /> Manage
+												</DropdownMenuItem>
+											</Link>
 											<DropdownMenuItem
 												onClick={() => handleDelete(course.id)}
 												className="flex gap-1 items-center"

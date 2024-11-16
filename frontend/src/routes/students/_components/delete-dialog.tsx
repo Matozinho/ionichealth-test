@@ -11,7 +11,7 @@ import {
 import type { DialogProps } from "@radix-ui/react-dialog";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import { useCallback, type FC } from "react";
+import { type FC, useCallback } from "react";
 import { toast } from "sonner";
 import { deleteStudent } from "../_services/delete-student";
 

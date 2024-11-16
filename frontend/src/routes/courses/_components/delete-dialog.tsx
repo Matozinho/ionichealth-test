@@ -11,7 +11,7 @@ import {
 import type { DialogProps } from "@radix-ui/react-dialog";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import { useCallback, type FC } from "react";
+import { type FC, useCallback } from "react";
 import { toast } from "sonner";
 import { deleteCourse } from "../_services/delete-course";
 
@@ -33,8 +33,12 @@ export const DeleteDialog: FC<DeleteDialogProps> = ({
 		},
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		onError: (error: any) => {
-			console.debug(error);
-			toast.error(error?.response?.data?.error || error?.message || "Unable to delete course");
+			console.error(error);
+			toast.error(
+				error?.response?.data?.error ||
+					error?.message ||
+					"Unable to delete course",
+			);
 		},
 	});
 

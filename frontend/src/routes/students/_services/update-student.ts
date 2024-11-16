@@ -2,7 +2,7 @@ import axios from "axios";
 import type { StudentI } from "./types";
 
 export interface UpdateStudentI extends Omit<StudentI, "courses"> {
-  courses: string[];
+	courses: string[];
 }
 
 export const updateStudent = async (

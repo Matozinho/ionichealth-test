@@ -18,15 +18,15 @@ import * as yup from "yup";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { FormFields } from "./form-fields";
 import { createStudent } from "../_services/create-student";
+import { FormFields } from "./form-fields";
 
 export const studentSchema = yup.object().shape({
 	name: yup.string().required(),
 	cpf: yup.string().required(),
 	email: yup.string().required(),
 	cellphone: yup.string().required(),
-  courses: yup.array().of(yup.string().required()).required().min(1),
+	courses: yup.array().of(yup.string().required()).required().min(1),
 });
 export type StudentSchema = yup.InferType<typeof studentSchema>;
 
@@ -62,7 +62,7 @@ export const DialogForm: FC<PropsWithChildren<DialogFormProps>> = ({
 
 	const onSubmit = useCallback(
 		(data: StudentSchema) => {
-      mutate(data);
+			mutate(data);
 		},
 		[mutate],
 	);

@@ -15,7 +15,8 @@ export const AppSidebar = () => {
 					<Link
 						className={cn(
 							"flex gap-1 items-center px-2 py-1 hover:bg-gray-100 transition duration-300 ease-in-out text-sm",
-							currentRoute.pathname.includes(page.href) && "bg-gray-100 font-medium",
+							currentRoute.pathname.includes(page.href) &&
+								"bg-gray-100 font-medium",
 						)}
 						to={page.href}
 						key={page.name}

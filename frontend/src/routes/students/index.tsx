@@ -93,14 +93,11 @@ export const StudentsPage = () => {
 											</Button>
 										</DropdownMenuTrigger>
 										<DropdownMenuContent>
-											<DropdownMenuItem>
-												<Link
-													className="flex gap-1 items-center"
-													to={student.id}
-												>
+											<Link to={student.id}>
+												<DropdownMenuItem className="flex gap-1 items-center">
 													<Edit size={16} /> Edit
-												</Link>
-											</DropdownMenuItem>
+												</DropdownMenuItem>
+											</Link>
 											<DropdownMenuItem
 												onClick={() => handleDelete(student.id)}
 												className="flex gap-1 items-center"

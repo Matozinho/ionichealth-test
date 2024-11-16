@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { format, parse } from "date-fns";
+import { Loader2 } from "lucide-react";
 import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
@@ -11,8 +13,6 @@ import { courseSchema } from "../_components/dialog-form";
 import { FormFields } from "../_components/form-fields";
 import { fetchCourseById } from "../_services/fetch-course-by-id";
 import { updateCourse } from "../_services/update-course";
-import { Loader2 } from "lucide-react";
-import { format, parse } from "date-fns";
 
 const courseSchemaExtended = courseSchema.concat(
 	yup.object().shape({

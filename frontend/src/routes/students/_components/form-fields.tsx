@@ -8,12 +8,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { useFormContext } from "react-hook-form";
 
-import type { StudentSchema } from "./dialog-form";
 import { MultiSelect } from "@/components/ui/multi-selector";
-import { useQuery } from "@tanstack/react-query";
-import { fetchCourses } from "@/routes/courses/_services/fetch-courses";
 import { Skeleton } from "@/components/ui/skeleton";
+import { fetchCourses } from "@/routes/courses/_services/fetch-courses";
+import { useQuery } from "@tanstack/react-query";
 import type { FC } from "react";
+import type { StudentSchema } from "./dialog-form";
 
 export const FormFields: FC<{ isEditing?: boolean }> = ({ isEditing }) => {
 	const form = useFormContext<StudentSchema>();
