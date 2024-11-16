@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import transaction, IntegrityError
 from api.courses.models import Course
+from api.students.models import Student
 from ..models import Enrollment
 from ..repositories.enrollment_repository import EnrollmentRepository
 
@@ -46,6 +47,15 @@ class EnrollmentService:
     @staticmethod
     def delete_enrollment(enrollment_id):
         enrollment = EnrollmentRepository.get_enrollment_by_id(enrollment_id)
+        if not enrollment:
+            raise ValidationError("Enrollment not found.")
+        EnrollmentRepository.delete_enrollment(enrollment)
+
+    @staticmethod
+    def disenroll_student_from_course(student_id, course_id):
+        course = Course.objects.get(id=course_id)
+        student = Student.objects.get(id=student_id)
+        enrollment = EnrollmentRepository.get_enrollment_by_student_and_course(student, course)
         if not enrollment:
             raise ValidationError("Enrollment not found.")
         EnrollmentRepository.delete_enrollment(enrollment)

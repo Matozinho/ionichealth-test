@@ -43,7 +43,7 @@ class StudentDetailView(APIView):
         responses={200: StudentSerializer, 404: "Not Found"}
     )
     def get(self, request, student_id):
-        student, enrollments = StudentService.get_student(student_id)
+        student, enrollments = StudentService.get_student_with_courses(student_id)
         if not student:
             return Response({"error": "Student not found."}, status=status.HTTP_404_NOT_FOUND)
         student_serializer = StudentSerializer(student)

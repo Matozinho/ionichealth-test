@@ -38,4 +38,4 @@ class StudentServiceTest(TestCase):
     def test_delete_student(self):
         student = StudentService.create_student(self.student_data, [self.course.id])
         StudentService.delete_student(student.id)
-        self.assertIsNone(StudentService.get_student(student.id))
+        self.assertIsNone(StudentService.get_student_with_courses(student.id))

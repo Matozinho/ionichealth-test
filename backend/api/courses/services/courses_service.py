@@ -1,6 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.db.models.deletion import ProtectedError
 from ..repositories.courses_repository import CourseRepository
+from api.enrollments.services.enrollment_service import EnrollmentService
+from api.students.services.students_service import StudentService
 
 
 class CourseService:
@@ -23,6 +25,21 @@ class CourseService:
     @staticmethod
     def get_course(course_id):
         return CourseRepository.get_course_by_id(course_id)
+
+    @staticmethod
+    def get_students(course_id):
+        enrollments = EnrollmentService.get_enrollments_for_course(course_id)
+        students = []
+
+        for enrollment in enrollments:
+            student = StudentService.get_student(enrollment.student.id)
+            students.append({
+                "student": student,
+                "enrollment_date": enrollment.enrollment_date
+            })
+
+        return students
+
 
     @staticmethod
     def update_course(course_id, course_data):

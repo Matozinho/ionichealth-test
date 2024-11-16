@@ -8,4 +8,9 @@ urlpatterns = [
         views.CourseDetailView.as_view(),
         name="course-get-update-delete",
     ),
+    path(
+        "course/<uuid:course_id>/students/",
+        views.CourseStudentsView.as_view(),
+        name="course-students",
+    ),
 ]

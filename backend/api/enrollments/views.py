@@ -90,3 +90,27 @@ class EnrollmentDeleteView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except ValidationError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DisEnrollByStudentCourseView(APIView):
+    @swagger_auto_schema(
+        operation_description="Delete an enrollment by student and course",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "student_id": openapi.Schema(
+                    type=openapi.TYPE_STRING, format=openapi.FORMAT_UUID
+                ),
+                "course_id": openapi.Schema(
+                    type=openapi.TYPE_STRING, format=openapi.FORMAT_UUID
+                ),
+            },
+        ),
+        responses={204: "No Content", 404: "Not Found"},
+    )
+    def delete(self, request, student_id, course_id):
+        try:
+            EnrollmentService.disenroll_student_from_course(student_id, course_id)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except ValidationError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

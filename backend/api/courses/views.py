@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from django.core.exceptions import ValidationError
 from .serializers import CourseSerializer
 from drf_yasg.utils import swagger_auto_schema
+from api.students.serializers import StudentSerializer
 
 from .services.courses_service import CourseService
 
@@ -83,3 +84,23 @@ class CourseDetailView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except ValidationError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CourseStudentsView(APIView):
+    @swagger_auto_schema(
+        operation_description="Retrieve a list of students enrolled in a course",
+        responses={200: CourseSerializer(many=True), 404: "Not Found"}
+    )
+    def get(self, request, course_id):
+        students_with_enrollments = CourseService.get_students(course_id)
+
+        if not students_with_enrollments:
+            return Response([], status=status.HTTP_200_OK)
+
+        # Extract students and enrollment dates
+        students = [item["student"] for item in students_with_enrollments]
+        enrollment_data = {item["student"].id: item["enrollment_date"] for item in students_with_enrollments}
+
+        # Pass enrollment_data as context to the serializer
+        serializer = StudentSerializer(students, many=True, context={"enrollment_data": enrollment_data})
+        return Response(serializer.data, status=status.HTTP_200_OK)
